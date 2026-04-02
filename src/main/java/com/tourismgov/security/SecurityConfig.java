@@ -52,10 +52,15 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/tourismgov/v1/sites/*/activities").hasAnyRole(OFFICER, AUDITOR, COMPLIANCE)
 
                 // 3. TOURIST PROFILES & DOCUMENTS
+                .requestMatchers(HttpMethod.POST,"/tourismgov/v1/tourist/create").permitAll()
+                .requestMatchers(HttpMethod.GET, "/tourismgov/v1/tourist/*").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/tourismgov/v1/tourist/**").hasRole(ADMIN)
+                .requestMatchers(HttpMethod.PUT, "/tourismgov/v1/tourist/*/update").hasRole(TOURIST)
+                .requestMatchers(HttpMethod.GET, "/tourismgov/v1/tourist/admin/all").hasRole(ADMIN) 
                 .requestMatchers(HttpMethod.POST, "/tourismgov/v1/touristdoc/*/documents").hasAnyRole(TOURIST, ADMIN)
+                .requestMatchers(HttpMethod.GET, "/tourismgov/v1/touristdoc/*/documents/*/view").hasAnyRole(ADMIN, TOURIST)
                 .requestMatchers(HttpMethod.PUT, "/tourismgov/v1/touristdoc/*/documents/*/verify").hasRole(ADMIN)
-                .requestMatchers(HttpMethod.GET, "/tourismgov/v1/tourist/*").hasAnyRole(TOURIST, ADMIN)
-                .requestMatchers(HttpMethod.DELETE, "/tourismgov/v1/tourists/**").hasRole(ADMIN)
+                .requestMatchers(HttpMethod.DELETE, "/tourismgov/v1/touristdoc/*/documents/*").hasAnyRole(TOURIST, ADMIN)
 
                 // 4. BOOKINGS & EVENTS
                 .requestMatchers(HttpMethod.GET, "/tourismgov/v1/events/**").permitAll() // Public view for tourists

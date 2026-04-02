@@ -1,7 +1,8 @@
 package com.tourismgov.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,57 +11,62 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tourismgov.dto.TouristRequest;
 import com.tourismgov.dto.TouristResponse;
+import com.tourismgov.dto.TouristSummaryResponse;
 import com.tourismgov.service.TouristService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/tourist")
+@RequiredArgsConstructor
+@RequestMapping("/tourismgov/v1/tourist")
 public class TouristController {
 
 	private final TouristService touristService;
 
-	public TouristController(TouristService touristService) {
-		this.touristService = touristService;
-	}
-
 	// Tourist Registration
 	@PostMapping("/create")
-	public TouristResponse createTourist(@Valid @RequestBody TouristRequest request) {
+	public ResponseEntity<TouristResponse> createTourist(@Valid @RequestBody TouristRequest request) {
 		log.info("API: create tourist called");
-		return touristService.createTourist(request);
+		TouristResponse response = touristService.createTourist(request);
+		return ResponseEntity.status(201).body(response);
 	}
 
 	// Tourist Profile
 	@GetMapping("/{touristId}")
-	public TouristResponse getTouristProfile(@PathVariable Long touristId) {
-		return touristService.getTouristById(touristId);
+	public ResponseEntity<TouristResponse> getTouristProfile(@PathVariable Long touristId) {
+		TouristResponse response = touristService.getTouristById(touristId);
+		return ResponseEntity.ok(response);
 	}
 
 	// Tourist Profile (Edit)
 	@PutMapping("/{touristId}/update")
-	public TouristResponse updateTouristProfile(@PathVariable Long touristId,
+	public ResponseEntity<TouristResponse> updateTouristProfile(@PathVariable Long touristId,
 			@Valid @RequestBody TouristRequest request) {
-		return touristService.updateTourist(touristId, request);
+		TouristResponse response = touristService.updateTourist(touristId, request);
+		return ResponseEntity.ok(response);
 	}
 
 	// Delete Tourist
-	@DeleteMapping("/tourists/{touristId}")
+	@DeleteMapping("/{touristId}")
 	public ResponseEntity<String> deleteTourist(@PathVariable Long touristId) {
 		touristService.deleteTourist(touristId);
-		return ResponseEntity.ok("Tourist Deleted Successfully");
+		return ResponseEntity.ok("Tourist deleted successfully");
 	}
 
-	// List of Profile
-	@GetMapping("/all")
-	public List<TouristResponse> getAllTourists() {
-		return touristService.getAllTourists();
+	// List of Profiles
+	@GetMapping("/admin/all")
+	public ResponseEntity<Page<TouristSummaryResponse>> getTouristSummaries(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<TouristSummaryResponse> response = touristService.getTouristSummaries(pageable);
+		return ResponseEntity.ok(response);
 	}
-
 }

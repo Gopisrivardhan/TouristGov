@@ -1,33 +1,56 @@
 package com.tourismgov.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.tourismgov.dto.TouristRequest;
 import com.tourismgov.dto.TouristResponse;
+import com.tourismgov.dto.TouristSummaryResponse;
 
+/**
+ * Service interface for managing tourist records in the government tourism system.
+ * Provides CRUD operations and summary retrieval for tourists.
+ */
 public interface TouristService {
 
     /**
-     * Registers a new tourist and saves their profile.
+     * Creates a new tourist record based on the provided request data.
+     *
+     * @param request the tourist details to be created
+     * @return the created tourist information as a response DTO
      */
-    TouristResponse createTourist(TouristRequest request);
+    public TouristResponse createTourist(TouristRequest request);
 
     /**
-     * Retrieves a single tourist profile by ID.
+     * Retrieves a tourist record by its unique identifier.
+     *
+     * @param touristId the ID of the tourist to retrieve
+     * @return the tourist information as a response DTO
      */
-    TouristResponse getTouristById(Long touristId);
+    public TouristResponse getTouristById(Long touristId);
 
     /**
-     * Updates an existing tourist profile.
+     * Updates an existing tourist record with new details.
+     *
+     * @param touristId the ID of the tourist to update
+     * @param request   the updated tourist details
+     * @return the updated tourist information as a response DTO
      */
-    TouristResponse updateTourist(Long touristId, TouristRequest request);
+    public TouristResponse updateTourist(Long touristId, TouristRequest request);
 
     /**
-     * Deletes a tourist and all associated records.
+     * Deletes a tourist record by its unique identifier.
+     *
+     * @param touristId the ID of the tourist to delete
      */
-    void deleteTourist(Long touristId);
+    public void deleteTourist(Long touristId);
 
     /**
-     * Retrieves a list of all registered tourists.
+     * Retrieves a paginated list of tourist summaries.
+     * Summaries provide lightweight information for listing purposes.
+     *
+     * @param pageable pagination and sorting information
+     * @return a page of tourist summary response DTOs
      */
-    List<TouristResponse> getAllTourists();
+    public Page<TouristSummaryResponse> getTouristSummaries(Pageable pageable);
 }
