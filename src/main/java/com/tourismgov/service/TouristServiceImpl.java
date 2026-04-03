@@ -36,41 +36,42 @@ public class TouristServiceImpl implements TouristService {
 	// Register
     @Transactional
     public TouristResponse createTourist(TouristRequest request) {
-        log.info("Starting atomic creation for Tourist and User: {}", request.getContactInfo());
-
-        if (userRepository.existsByEmail(request.getContactInfo())) {
-            log.warn("Email already exists: {}", request.getContactInfo());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, 
-                    "An account with this email already exists.");
+        // Check duplicate phone
+        if (touristRepository.findByContactInfo(request.getContactInfo()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    String.format("A tourist already exists with phone: %s", request.getContactInfo()));
         }
 
-        // 2. Create and Save the User (The "Security" side)
+        // Check duplicate email
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    String.format("An account with this email already exists: %s", request.getEmail()));
+        }
+
+        // Create User (security side)
         User user = new User();
         user.setName(request.getName());
-        user.setEmail(request.getContactInfo());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());                 // ✅ email stored in User
+        user.setPhone(request.getContactInfo());           // ✅ phone stored in User
+        user.setPassword(passwordEncoder.encode(request.getPassword())); // ✅ password only in User
         user.setRole("TOURIST");
         user.setStatus("ACTIVE");
-        
-        // We save the user to generate the User ID
+
         User savedUser = userRepository.save(user);
 
-        // 3. Create and Save the Tourist (The "Profile" side)
+        // Create Tourist (profile side)
         Tourist tourist = new Tourist();
         request.apply(tourist);
         validateAdult(tourist);
-        
-        // LINKING: This is the efficient part. We link the objects directly.
+
         tourist.setUser(savedUser);
         tourist.setStatus(Status.INACTIVE);
 
         tourist = touristRepository.save(tourist);
-        
-        log.info("Successfully created Tourist ID: {} linked to User ID: {}", 
-                 tourist.getTouristId(), savedUser.getUserId());
 
         return TouristResponse.toResponse(tourist);
     }
+
 
 	// Profile
 	public TouristResponse getTouristById(Long touristId) {
@@ -108,18 +109,30 @@ public class TouristServiceImpl implements TouristService {
 	}
 
 	// Delete Tourist
+	@Transactional
 	public void deleteTourist(Long touristId) {
-		log.info("Attempting to delete tourist with ID: {}", touristId);
+	    log.info("Attempting to delete tourist with ID: {}", touristId);
 
-		Tourist tourist = touristRepository.findById(touristId).orElseThrow(() -> {
-			log.error("Delete failed: Tourist {} not found", touristId);
-			return new ResponseStatusException(HttpStatus.NOT_FOUND,
-					String.format(TouristErrorMessage.ERROR_TOURIST_NOT_FOUND, touristId));
-		});
+	    Tourist tourist = touristRepository.findById(touristId).orElseThrow(() -> {
+	        log.error("Delete failed: Tourist {} not found", touristId);
+	        return new ResponseStatusException(HttpStatus.NOT_FOUND,
+	                String.format(TouristErrorMessage.ERROR_TOURIST_NOT_FOUND, touristId));
+	    });
 
-		touristRepository.delete(tourist);
-		log.info("Tourist {} and their records deleted successfully", touristId);
+	    // Get linked User
+	    User user = tourist.getUser();
+
+	    // First delete Tourist
+	    touristRepository.delete(tourist);
+	    log.info("Tourist {} deleted successfully", touristId);
+
+	    // Then delete User if exists
+	    if (user != null) {
+	        userRepository.delete(user);
+	        log.info("Linked User {} deleted successfully", user.getUserId());
+	    }
 	}
+
 
 	// List of Profiles (Admin)
 	public Page<TouristSummaryResponse> getTouristSummaries(Pageable pageable) {

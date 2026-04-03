@@ -21,8 +21,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -30,54 +28,50 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
+@Table(name = "tourist")
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "tourist")
 public class Tourist {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long touristId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long touristId;
 
-	@Column(name = "name", nullable = false, length = 100)
-	@Pattern(regexp = "^[A-Za-z ]+$", message = "Name must contain only letters and spaces")
-	private String name;
+    @Column(name = "name", nullable = false, length = 100)
+    @Pattern(regexp = "^[A-Za-z ]+$", message = "Name must contain only letters and spaces")
+    private String name;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@Column(name = "dob", nullable = false)
-	@NotNull(message = "Date of Birth is required")
-	private LocalDate dob;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "dob", nullable = false)
+    @NotNull(message = "Date of Birth is required")
+    private LocalDate dob;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "gender", nullable = false, columnDefinition = "ENUM('FEMALE', 'MALE', 'OTHER')")
-	private Gender gender;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false, columnDefinition = "ENUM('FEMALE', 'MALE', 'OTHER')")
+    private Gender gender;
 
-	@Column(name = "address", nullable= false)
-	@Size(min = 5, max = 200, message = "Address must be between 5 and 200 characters")
-	private String address;
+    @Column(name = "address", nullable = false)
+    @Size(min = 5, max = 200, message = "Address must be between 5 and 200 characters")
+    private String address;
 
-	@Column(name = "contactInfo", unique = true, nullable = false, length = 100)
-	@Email(message = "Invalid email format")
-	private String contactInfo;
-	
-	@NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters")
-    private String password;
+    // ✅ Phone number only, must start with 6/7/8/9 and be 10 digits
+    @Column(name = "contactInfo", unique = true, nullable = false, length = 10)
+    @Pattern(regexp = "^[6-9][0-9]{9}$", message = "Phone must start with 6, 7, 8, or 9 and be exactly 10 digits")
+    private String contactInfo;
 
-	@Column(name = "status", nullable = false, length = 50)
-	@Enumerated(EnumType.STRING)
-	private Status status = Status.INACTIVE; // ACTIVE, INACTIVE
+    @Column(name = "status", nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.INACTIVE;
 
-	@OneToMany(mappedBy = "tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<TouristDocument> documents = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	// One Tourist can have many Bookings
-	@OneToMany(mappedBy = "tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Booking> bookings;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+    @OneToMany(mappedBy = "tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TouristDocument> documents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Booking> bookings;
 }

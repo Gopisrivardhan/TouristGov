@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import com.tourismgov.enums.Gender;
 import com.tourismgov.model.Tourist;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -19,35 +18,37 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TouristRequest {
-	@NotBlank(message = "Name is required")
-	@Pattern(regexp = "^[A-Za-z ]+$", message = "Name must contain only letters and spaces")
-	private String name;
+    @NotBlank(message = "Name is required")
+    @Pattern(regexp = "^[A-Za-z ]+$", message = "Name must contain only letters and spaces")
+    private String name;
 
-	@NotNull(message = "Date of Birth is required")
-	private LocalDate dob;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "gender", nullable = false, columnDefinition = "ENUM('FEMALE', 'MALE', 'OTHER')")
-	private Gender gender;
-	@Size(min = 5, max = 200, message = "Address must be between 5 and 200 characters")
-	private String address;
+    @NotNull(message = "Date of Birth is required")
+    private LocalDate dob;
 
-	
-	@NotBlank(message = "Contact info is required")
-	@Email(message = "Invalid email format")
-	private String contactInfo;
-	
-	@NotBlank(message = "Password is required")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Size(min = 5, max = 200, message = "Address must be between 5 and 200 characters")
+    private String address;
+
+    @NotBlank(message = "Contact info (phone) is required")
+    @Pattern(regexp = "^[6-9][0-9]{9}$", message = "Phone must start with 6, 7, 8, or 9 and be exactly 10 digits")
+    private String contactInfo;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    private String email;
+
+    @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
-
-	public void apply(Tourist tourist) {
-		tourist.setName(this.name);
-		tourist.setDob(this.dob);
-		tourist.setGender(this.gender);
-		tourist.setAddress(this.address);
-		tourist.setContactInfo(this.contactInfo);
-		tourist.setPassword(this.password);
-	}
+    public void apply(Tourist tourist) {
+        tourist.setName(this.name);
+        tourist.setDob(this.dob);
+        tourist.setGender(this.gender);
+        tourist.setAddress(this.address);
+        tourist.setContactInfo(this.contactInfo);
+        // ✅ no email or password set here, those belong to User
+    }
 }
