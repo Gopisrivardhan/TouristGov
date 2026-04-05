@@ -1,13 +1,8 @@
 package com.tourismgov.security;
 
-import java.util.Collections;
-
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import org.springframework.stereotype.Service;
 
 import com.tourismgov.model.User;
@@ -18,6 +13,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    // Your existing constructor
     public CustomUserDetailsService(UserRepository repo) {
         this.userRepository = repo;
     }
@@ -25,13 +21,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
+        // Your existing DB fetch logic
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-        );
+        // THE MERGE: Instead of returning Spring's default User, 
+        // we return our CustomUserDetails which contains the user.getUserId()
+        return new CustomUserDetails(user);
     }
 }

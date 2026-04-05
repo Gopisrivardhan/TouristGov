@@ -9,9 +9,6 @@ import java.time.LocalDate;
 @Data
 public class PreservationActivityRequest {
 
-    @NotNull(message = "Officer ID is required")
-    private Long officerId;
-
     @NotBlank(message = "Description of the activity is required")
     private String description;
 

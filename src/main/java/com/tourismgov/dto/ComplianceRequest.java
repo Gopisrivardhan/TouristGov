@@ -16,8 +16,4 @@ public class ComplianceRequest {
     private String complianceType;
 
     private String description;
-    
-    //We must know who is creating this record for the AuditLog!
-    @NotNull(message = "Officer ID is required")
-    private Long officerId; 
 }

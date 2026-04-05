@@ -12,5 +12,6 @@ public enum NotificationCategory {
     EVENT,        // Related to events and tour bookings
     PROGRAM,      // Related to tourism programs and resources
     COMPLIANCE,   // Related to compliance records and audits
-    SYSTEM        // Used for global broadcasts and system-wide alerts
+    SYSTEM ,       // Used for global broadcasts and system-wide alerts
+    BOOKING,ALERT
 }

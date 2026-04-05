@@ -40,9 +40,13 @@ class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 
                 // 1. PUBLIC / AUTHENTICATION
-            	.requestMatchers("/tourismgov/users/**").permitAll()
-            	.requestMatchers("/tourismgov/auth/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/tourismgov/tourists").permitAll() // Tourist Self-registration
+            	.requestMatchers("/tourismgov/v1/users/**").permitAll()
+            	.requestMatchers("/tourismgov/v1/auth/register").permitAll()
+            	.requestMatchers("/tourismgov/v1/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/tourismgov/tourists").permitAll()
+                .requestMatchers(HttpMethod.POST, "/tourismgov/v1/auth/password/reset").hasAnyRole(ADMIN)
+                .requestMatchers(HttpMethod.POST, "/tourismgov/v1/auth/password/update").hasAnyRole(ADMIN,TOURIST)
+                .requestMatchers(HttpMethod.POST, "/tourismgov/v1/audit-logs/**").hasAnyRole(ADMIN)
                 
                 // 2. HERITAGE SITES & PRESERVATION
                 .requestMatchers(HttpMethod.GET, "/tourismgov/v1/sites/**").permitAll() 
@@ -56,6 +60,7 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/tourismgov/v1/tourist/*").hasAnyRole(TOURIST,ADMIN)
                 .requestMatchers(HttpMethod.DELETE, "/tourismgov/v1/tourist/**").hasAnyRole(TOURIST,ADMIN)
                 .requestMatchers(HttpMethod.PUT, "/tourismgov/v1/tourist/*/update").hasRole(TOURIST)
+                
                 .requestMatchers(HttpMethod.GET, "/tourismgov/v1/tourist/admin/all").hasRole(ADMIN) 
                 .requestMatchers(HttpMethod.POST, "/tourismgov/v1/touristdoc/*/documents").hasAnyRole(TOURIST, ADMIN)
                 .requestMatchers(HttpMethod.GET, "/tourismgov/v1/touristdoc/*/documents/*/view").hasAnyRole(ADMIN, TOURIST)

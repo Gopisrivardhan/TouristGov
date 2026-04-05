@@ -1,19 +1,26 @@
 package com.tourismgov.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.tourismgov.dto.AuthRequest;
 import com.tourismgov.dto.AuthResponse;
+import com.tourismgov.dto.PasswordResetRequest;
+import com.tourismgov.dto.PasswordUpdateRequest;
 import com.tourismgov.dto.UserRequest;
 import com.tourismgov.dto.UserResponse;
 import com.tourismgov.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/tourismgov/auth")
+@RequestMapping("/tourismgov/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*")
@@ -33,5 +40,22 @@ public class AuthController {
         log.info("REST request to login user: {}", request.getEmail());
         AuthResponse response = authService.loginUser(request);
         return ResponseEntity.ok(response);
+    }
+    
+
+    //Update password
+    @PutMapping("/password/update")
+    public ResponseEntity<Void> updatePassword(
+            @Valid @RequestBody PasswordUpdateRequest request) {
+    	authService.updatePassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    //Reset password
+    @PutMapping("/password/reset")
+    public ResponseEntity<Void> resetPassword(
+            @Valid @RequestBody PasswordResetRequest request) {
+    	authService.resetPassword(request);
+        return ResponseEntity.noContent().build();
     }
 }

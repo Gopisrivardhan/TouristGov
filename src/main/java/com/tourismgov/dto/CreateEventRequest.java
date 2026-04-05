@@ -9,9 +9,13 @@ import java.time.LocalDateTime;
 public class CreateEventRequest {
     @NotNull(message = "Site ID is required")
     private Long siteId;
+
     @NotBlank(message = "Title is required")
     private String title;
     private String location;
+    
     @NotNull(message = "Date is required")
     private LocalDateTime date;
+    private Long programId;
+    private String status;
 }

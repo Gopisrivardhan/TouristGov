@@ -3,6 +3,7 @@ package com.tourismgov.controller;
 import com.tourismgov.dto.*;
 import com.tourismgov.service.TourismProgramService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,16 +15,15 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/tourismgov/v1/programs") // Standardized base path
+@RequestMapping("/tourismgov/v1/programs") 
+@RequiredArgsConstructor // Automatically creates the constructor for 'programService'
 public class TourismProgramController {
 
     private final TourismProgramService programService;
 
-    public TourismProgramController(TourismProgramService programService) {
-        this.programService = programService;
-    }
-
-    // --- PROGRAM MANAGEMENT ---
+    // ==========================================
+    // PROGRAM MANAGEMENT
+    // ==========================================
 
     @PostMapping
     public ResponseEntity<ProgramResponse> createProgram(@Valid @RequestBody ProgramRequest request) {
@@ -47,7 +47,6 @@ public class TourismProgramController {
         return ResponseEntity.ok(programService.getProgramsPaged(page, size));
     }
 
-    // NEW: Full Update Endpoint
     @PutMapping("/{programId}")
     public ResponseEntity<ProgramResponse> updateProgram(
             @PathVariable Long programId, 
@@ -62,14 +61,15 @@ public class TourismProgramController {
         return ResponseEntity.ok(programService.updateProgramStatus(programId, status));
     }
 
-    // NEW: Delete Program Endpoint
     @DeleteMapping("/{programId}")
     public ResponseEntity<String> deleteProgram(@PathVariable Long programId) {
         programService.deleteProgram(programId);
         return ResponseEntity.ok("Program deleted successfully");
     }
 
-    // --- RESOURCE MANAGEMENT ---
+    // ==========================================
+    // RESOURCE MANAGEMENT
+    // ==========================================
 
     @PostMapping("/{programId}/resources")
     public ResponseEntity<ResourceResponse> allocateResource(
@@ -90,14 +90,15 @@ public class TourismProgramController {
         return ResponseEntity.ok(programService.updateResourceStatus(resourceId, status));
     }
 
-    // NEW: Delete Resource Endpoint
     @DeleteMapping("/resources/{resourceId}")
     public ResponseEntity<String> deleteResource(@PathVariable Long resourceId) {
         programService.deleteResource(resourceId);
         return ResponseEntity.ok("Resource deleted successfully");
     }
 
-    // --- ANALYTICS / AUDIT ENDPOINT ---
+    // ==========================================
+    // REPORTING & ANALYTICS
+    // ==========================================
 
     @GetMapping("/{programId}/budget-report")
     public ResponseEntity<Map<String, Object>> getProgramBudgetReport(@PathVariable Long programId) {

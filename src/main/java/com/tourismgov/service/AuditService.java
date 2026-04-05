@@ -5,15 +5,15 @@ import java.util.List;
 
 public interface AuditService {
     
-    // Logic: Schedule or record an official audit
+    // Record a new official government audit
     AuditDto recordAudit(AuditDto auditDto);
     
-    // Logic: Fetch all audits for the Management Dashboard (Section 7)
+    // Update the findings or status of an ongoing audit
+    AuditDto updateAuditFindings(Long auditId, String findings, String status);
+    
+    // Fetch all audits for the Management Dashboard
     List<AuditDto> getAllAudits();
     
-    // Logic: Get audits by a specific officer
+    // Get audits conducted by a specific officer
     List<AuditDto> getAuditsByOfficer(Long officerId);
-    
-    // Logic: Update findings for an ongoing audit
-    AuditDto updateAuditFindings(Long auditId, String findings, String status);
 }

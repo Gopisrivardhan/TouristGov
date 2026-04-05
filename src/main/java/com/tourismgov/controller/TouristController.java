@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tourismgov.dto.TouristRequest;
 import com.tourismgov.dto.TouristResponse;
 import com.tourismgov.dto.TouristSummaryResponse;
+import com.tourismgov.dto.TouristUpdateRequest;
 import com.tourismgov.service.TouristService;
 
 import jakarta.validation.Valid;
@@ -48,10 +49,12 @@ public class TouristController {
 
 	// Tourist Profile (Edit)
 	@PutMapping("/{touristId}/update")
-	public ResponseEntity<TouristResponse> updateTouristProfile(@PathVariable Long touristId,
-			@Valid @RequestBody TouristRequest request) {
-		TouristResponse response = touristService.updateTourist(touristId, request);
-		return ResponseEntity.ok(response);
+	public ResponseEntity<TouristResponse> updateTouristProfile(
+	        @PathVariable Long touristId,
+	        @Valid @RequestBody TouristUpdateRequest request) { // <-- Changed DTO here
+	    
+	    TouristResponse response = touristService.updateTourist(touristId, request);
+	    return ResponseEntity.ok(response);
 	}
 
 	// Delete Tourist

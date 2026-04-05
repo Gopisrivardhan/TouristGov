@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 @Getter             
 @Setter             
 @NoArgsConstructor  
-public class Audit extends BaseEntity{
+@AllArgsConstructor
+@Builder
+public class Audit extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

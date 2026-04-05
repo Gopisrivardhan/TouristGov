@@ -1,19 +1,19 @@
 package com.tourismgov.service;
 
-import java.util.List;
+import com.tourismgov.dto.AuditLogResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.tourismgov.dto.AuditLogRequest;
-import com.tourismgov.dto.AuditLogResponse;
-import com.tourismgov.model.AuditLog;
+
+import java.time.LocalDateTime;
 
 public interface AuditLogService {
-    AuditLog create(AuditLogRequest request);
-    List<AuditLog> createAll(List<AuditLogRequest> requests);
+    // Internal System Logging
+    void logAction(Long userId, String action, String resource, String status);
+    void logActionInCurrentTransaction(Long userId, String action, String resource, String status);
     
-    // Fixed the return type to return a Page of DTOs for the Administrator Panel
+    // Reporting & Fetching
     Page<AuditLogResponse> getAllLogs(Pageable pageable);
-    
-    // NEW: The helper method we used in AuditServiceImpl to automatically log actions
-    void recordAction(Long userId, String action, String resource);
+    Page<AuditLogResponse> getLogsByUserId(Long userId, Pageable pageable);
+    Page<AuditLogResponse> getLogsByDateRange(LocalDateTime start, LocalDateTime end, Pageable pageable);
+    Page<AuditLogResponse> getLogsByAction(String action, Pageable pageable);
 }

@@ -65,6 +65,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.saveAll(toSave);
     }
     
+    
+    @Override
+    public List<UserResponse> fetchAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+    
     @Override
     @Transactional
     public UserResponse registerUser(UserRequest request) {

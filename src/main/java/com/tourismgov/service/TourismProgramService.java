@@ -10,21 +10,21 @@ import java.util.List;
 import java.util.Map;
 
 public interface TourismProgramService {
-    // --- Program Management ---
+    // Program Management
     ProgramResponse createProgram(ProgramRequest request);
     ProgramResponse getProgramById(Long programId);
     List<ProgramResponse> getAllPrograms();
     Page<ProgramResponse> getProgramsPaged(int page, int size);
-    ProgramResponse updateProgram(Long programId, ProgramRequest request); // NEW
+    ProgramResponse updateProgram(Long programId, ProgramRequest request);
     ProgramResponse updateProgramStatus(Long programId, String status);
-    void deleteProgram(Long programId); // NEW
+    void deleteProgram(Long programId);
 
-    // --- Resource Management ---
+    // Resource Management
     ResourceResponse allocateResourceToProgram(Long programId, ResourceRequest request);
     ResourceResponse updateResourceStatus(Long resourceId, String status);
     List<ResourceResponse> getResourcesByProgram(Long programId);
-    void deleteResource(Long resourceId); // NEW
+    void deleteResource(Long resourceId);
 
-    // --- Analytics ---
+    // Reporting
     Map<String, Object> getBudgetReport(Long programId);
 }

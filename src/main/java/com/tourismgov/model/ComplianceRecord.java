@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ComplianceRecord extends BaseEntity{
+public class ComplianceRecord extends BaseEntity {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long complianceId;
@@ -24,11 +25,4 @@ public class ComplianceRecord extends BaseEntity{
     
     @Column(columnDefinition = "TEXT")
     private String notes;
-
-    @PrePersist
-    protected void onCreate() {
-        if (this.date == null) {
-            this.date = LocalDateTime.now();
-        }
-    }
 }

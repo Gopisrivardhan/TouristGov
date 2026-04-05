@@ -5,6 +5,7 @@ import com.tourismgov.dto.EventResponse;
 import com.tourismgov.dto.UpdateEventStatusRequest;
 import com.tourismgov.service.EventService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,14 +16,11 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/tourismgov/v1/events") // Standardized to match your /api/v1 architecture
+@RequestMapping("/tourismgov/v1/events") 
+@RequiredArgsConstructor
 public class EventController {
 
     private final EventService eventService;
-
-    public EventController(EventService eventService) {
-        this.eventService = eventService;
-    }
 
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody CreateEventRequest request) {
@@ -59,7 +57,6 @@ public class EventController {
         return ResponseEntity.ok(eventService.updateEventStatus(eventId, request));
     }
 
-    //Delete Event Endpoint
     @DeleteMapping("/{eventId}")
     public ResponseEntity<String> deleteEvent(@PathVariable Long eventId) {
         log.info("REST request to delete Event ID: {}", eventId);

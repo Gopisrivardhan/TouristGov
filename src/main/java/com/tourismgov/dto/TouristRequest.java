@@ -49,6 +49,5 @@ public class TouristRequest {
         tourist.setGender(this.gender);
         tourist.setAddress(this.address);
         tourist.setContactInfo(this.contactInfo);
-        // ✅ no email or password set here, those belong to User
     }
 }

@@ -1,56 +1,16 @@
 package com.tourismgov.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import com.tourismgov.dto.TouristRequest;
 import com.tourismgov.dto.TouristResponse;
 import com.tourismgov.dto.TouristSummaryResponse;
+import com.tourismgov.dto.TouristUpdateRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-/**
- * Service interface for managing tourist records in the government tourism system.
- * Provides CRUD operations and summary retrieval for tourists.
- */
 public interface TouristService {
-
-    /**
-     * Creates a new tourist record based on the provided request data.
-     *
-     * @param request the tourist details to be created
-     * @return the created tourist information as a response DTO
-     */
-    public TouristResponse createTourist(TouristRequest request);
-
-    /**
-     * Retrieves a tourist record by its unique identifier.
-     *
-     * @param touristId the ID of the tourist to retrieve
-     * @return the tourist information as a response DTO
-     */
-    public TouristResponse getTouristById(Long touristId);
-
-    /**
-     * Updates an existing tourist record with new details.
-     *
-     * @param touristId the ID of the tourist to update
-     * @param request   the updated tourist details
-     * @return the updated tourist information as a response DTO
-     */
-    public TouristResponse updateTourist(Long touristId, TouristRequest request);
-
-    /**
-     * Deletes a tourist record by its unique identifier.
-     *
-     * @param touristId the ID of the tourist to delete
-     */
-    public void deleteTourist(Long touristId);
-
-    /**
-     * Retrieves a paginated list of tourist summaries.
-     * Summaries provide lightweight information for listing purposes.
-     *
-     * @param pageable pagination and sorting information
-     * @return a page of tourist summary response DTOs
-     */
-    public Page<TouristSummaryResponse> getTouristSummaries(Pageable pageable);
+    TouristResponse createTourist(TouristRequest request);
+    TouristResponse getTouristById(Long touristId);
+    TouristResponse updateTourist(Long touristId, TouristUpdateRequest request);
+    void deleteTourist(Long touristId);
+    Page<TouristSummaryResponse> getTouristSummaries(Pageable pageable);
 }

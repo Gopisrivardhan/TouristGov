@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public class EventResponse {
     private Long eventId;
     private Long siteId;
+    private Long programId;
     private String title;
     private String location;
     private LocalDateTime date;

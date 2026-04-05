@@ -1,16 +1,20 @@
 package com.tourismgov.repository;
 
 import com.tourismgov.model.Tourist;
-
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface TouristRepository extends JpaRepository<Tourist, Long> {
-	Optional<Tourist> findByContactInfo(String contactInfo);
-	Page<Tourist> findAll(Pageable pageable);
+    
+    // Used during registration to prevent duplicate phone numbers
+    Optional<Tourist> findByContactInfo(String contactInfo);
+
+    // CRITICAL FOR SECURITY: Finds a tourist profile using the logged-in User's ID
+    Optional<Tourist> findByUser_UserId(Long userId);
+    
+    // Used to quickly verify if a User already has a Tourist profile attached
+    boolean existsByUser_UserId(Long userId);
 }

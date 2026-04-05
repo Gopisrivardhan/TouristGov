@@ -4,6 +4,7 @@ import com.tourismgov.dto.BookingRequest;
 import com.tourismgov.dto.BookingResponse;
 import com.tourismgov.service.BookingService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,13 +16,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/tourismgov/v1")
+@RequiredArgsConstructor // Professional constructor injection
 public class BookingController {
 
     private final BookingService bookingService;
-
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
 
     @PostMapping("/events/{eventId}/bookings")
     public ResponseEntity<BookingResponse> createBooking(
@@ -39,6 +37,7 @@ public class BookingController {
     public ResponseEntity<BookingResponse> updateBookingStatus(
             @PathVariable Long bookingId,
             @Valid @RequestBody BookingRequest request) {
+        // Security context is now handled automatically in the service layer!
         return ResponseEntity.ok(bookingService.updateBookingStatus(bookingId, request));
     }
 
