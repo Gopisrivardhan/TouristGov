@@ -12,26 +12,26 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Booking extends BaseEntity{
+public class Booking extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private Long bookingId;
 
-    // Links to Tourist
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tourist_id", nullable = false)
-    private Tourist tourist;
-
-    // Links to Event
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
     @Column(name = "booking_date", nullable = false)
     private LocalDateTime date;
 
     @Column(nullable = false, length = 50)
     private String status;
+
+    // The tourist who made this booking.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tourist_id", nullable = false)
+    private Tourist tourist;
+
+    // The specific scheduled event being booked.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
 }

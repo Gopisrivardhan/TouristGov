@@ -19,4 +19,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByTourist_TouristId(Long touristId);
     
     Page<Booking> findByEvent_EventId(Long eventId,Pageable pageable);
+
+	boolean existsByEvent_EventIdAndTourist_TouristId(Long eventId, Long touristId);
 }

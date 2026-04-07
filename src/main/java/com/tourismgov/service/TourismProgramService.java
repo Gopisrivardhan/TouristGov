@@ -2,29 +2,34 @@ package com.tourismgov.service;
 
 import com.tourismgov.dto.ProgramRequest;
 import com.tourismgov.dto.ProgramResponse;
-import com.tourismgov.dto.ResourceRequest;
-import com.tourismgov.dto.ResourceResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
 
 public interface TourismProgramService {
-    // Program Management
+    
+    // Creates a new tourism program.
     ProgramResponse createProgram(ProgramRequest request);
+    
+    // Retrieves the details of a specific program by its ID.
     ProgramResponse getProgramById(Long programId);
+    
+    // Retrieves a list of all tourism programs.
     List<ProgramResponse> getAllPrograms();
+    
+    // Retrieves a paginated list of tourism programs.
     Page<ProgramResponse> getProgramsPaged(int page, int size);
+    
+    // Fully updates the details of an existing program.
     ProgramResponse updateProgram(Long programId, ProgramRequest request);
+    
+    // Updates the current status of a program (e.g., PLANNED, ACTIVE, COMPLETED).
     ProgramResponse updateProgramStatus(Long programId, String status);
+    
+    // Deletes a tourism program from the system.
     void deleteProgram(Long programId);
 
-    // Resource Management
-    ResourceResponse allocateResourceToProgram(Long programId, ResourceRequest request);
-    ResourceResponse updateResourceStatus(Long resourceId, String status);
-    List<ResourceResponse> getResourcesByProgram(Long programId);
-    void deleteResource(Long resourceId);
-
-    // Reporting
+    // Generates a high-level budget report detailing total budget, spent funds, and remaining balance.
     Map<String, Object> getBudgetReport(Long programId);
 }
