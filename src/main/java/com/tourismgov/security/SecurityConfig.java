@@ -75,7 +75,7 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/tourismgov/v1/bookings/**").hasAnyRole(ADMIN, COMPLIANCE, AUDITOR, OFFICER)
 
                 // 5. PROGRAM & RESOURCE MANAGEMENT
-                .requestMatchers(HttpMethod.POST, "/tourismgov/v1/programs/**").hasAnyRole(MANAGER, ADMIN, OFFICER)
+                .requestMatchers(HttpMethod.POST, "/tourismgov/v1/programs/**").hasAnyRole(MANAGER, ADMIN)
                 .requestMatchers(HttpMethod.GET, "/tourismgov/v1/programs/**").hasAnyRole(MANAGER, ADMIN, OFFICER, AUDITOR, COMPLIANCE)
                 .requestMatchers(HttpMethod.PATCH, "/tourismgov/v1/resources/**").hasAnyRole(OFFICER, MANAGER)
 

@@ -18,7 +18,7 @@ import com.tourismgov.dto.DocumentVerifyRequest;
 import com.tourismgov.dto.TouristDocumentResponse;
 import com.tourismgov.enums.Status;
 import com.tourismgov.enums.VerificationStatus;
-import com.tourismgov.exception.ErrorMessages;
+import com.tourismgov.exception.TouristErrorMessage;
 import com.tourismgov.model.Tourist;
 import com.tourismgov.model.TouristDocument;
 import com.tourismgov.repository.TouristDocumentRepository;
@@ -112,7 +112,7 @@ public class TouristDocumentServiceImpl implements TouristDocumentService {
 			log.warn("Invalid verification status '{}' for document {} of tourist {}", request.getStatus(), documentId,
 					touristId);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					String.format(ErrorMessages.ERROR_INVALID_VERIFICATION_STATUS, request.getStatus()));
+					String.format(TouristErrorMessage.ERROR_INVALID_VERIFICATION_STATUS, request.getStatus()));
 		}
 
 		doc.setVerificationStatus(newStatus);
@@ -161,11 +161,11 @@ public class TouristDocumentServiceImpl implements TouristDocumentService {
 
 	private TouristDocument getTouristDocumentOrThrow(Long touristId, Long documentId) {
 		touristRepository.findById(touristId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-				String.format(ErrorMessages.ERROR_TOURIST_NOT_FOUND, touristId)));
+				String.format(TouristErrorMessage.ERROR_TOURIST_NOT_FOUND, touristId)));
 
 		return documentRepository.findByDocumentIdAndTourist_TouristId(documentId, touristId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-						String.format(ErrorMessages.ERROR_DOCUMENT_NOT_FOUND, documentId, touristId)));
+						String.format(TouristErrorMessage.ERROR_DOCUMENT_NOT_FOUND, documentId, touristId)));
 	}
 
 	private void syncTouristStatus(Tourist tourist) {

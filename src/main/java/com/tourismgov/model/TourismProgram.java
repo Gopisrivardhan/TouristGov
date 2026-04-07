@@ -12,6 +12,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -48,11 +51,16 @@ public class TourismProgram extends BaseEntity {
     private String status;
 
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
     private List<Resource> resources;
 
-    // CHANGED: One Program has Many Events. (Removed the ManyToMany with HeritageSite)
-    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Event> events;
+    // NEW: Many-to-Many link to Heritage Sites
+    // This creates a special mapping table in your database automatically!
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "program_heritage_sites",
+        joinColumns = @JoinColumn(name = "program_id"),
+        inverseJoinColumns = @JoinColumn(name = "site_id")
+    )
+    @JsonManagedReference // This tells Jackson: "This is the primary side to show"
+    private List<HeritageSite> heritageSites;
 }

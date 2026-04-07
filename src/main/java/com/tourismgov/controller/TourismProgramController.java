@@ -1,7 +1,6 @@
 package com.tourismgov.controller;
 
-import com.tourismgov.dto.ProgramRequest;
-import com.tourismgov.dto.ProgramResponse;
+import com.tourismgov.dto.*;
 import com.tourismgov.service.TourismProgramService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +15,18 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/tourismgov/v1/programs")
-@RequiredArgsConstructor
+@RequestMapping("/tourismgov/v1/programs") 
+@RequiredArgsConstructor // Automatically creates the constructor for 'programService'
 public class TourismProgramController {
 
     private final TourismProgramService programService;
 
+    // ==========================================
+    // PROGRAM MANAGEMENT
+    // ==========================================
+
     @PostMapping
     public ResponseEntity<ProgramResponse> createProgram(@Valid @RequestBody ProgramRequest request) {
-        log.info("REST request to create Tourism Program: '{}'", request.getTitle());
         return new ResponseEntity<>(programService.createProgram(request), HttpStatus.CREATED);
     }
 
@@ -60,17 +62,46 @@ public class TourismProgramController {
     }
 
     @DeleteMapping("/{programId}")
-    public ResponseEntity<Void> deleteProgram(@PathVariable Long programId) {
+    public ResponseEntity<String> deleteProgram(@PathVariable Long programId) {
         programService.deleteProgram(programId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Program deleted successfully");
     }
 
-    /**
-     * Reporting API: Generates financial health status for a program
-     */
+    // ==========================================
+    // RESOURCE MANAGEMENT
+    // ==========================================
+
+    @PostMapping("/{programId}/resources")
+    public ResponseEntity<ResourceResponse> allocateResource(
+            @PathVariable Long programId,
+            @Valid @RequestBody ResourceRequest request) {
+        return new ResponseEntity<>(programService.allocateResourceToProgram(programId, request), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{programId}/resources")
+    public ResponseEntity<List<ResourceResponse>> getResourcesForProgram(@PathVariable Long programId) {
+        return ResponseEntity.ok(programService.getResourcesByProgram(programId));
+    }
+
+    @PatchMapping("/resources/{resourceId}/status")
+    public ResponseEntity<ResourceResponse> updateResourceStatus(
+            @PathVariable Long resourceId,
+            @RequestParam String status) {
+        return ResponseEntity.ok(programService.updateResourceStatus(resourceId, status));
+    }
+
+    @DeleteMapping("/resources/{resourceId}")
+    public ResponseEntity<String> deleteResource(@PathVariable Long resourceId) {
+        programService.deleteResource(resourceId);
+        return ResponseEntity.ok("Resource deleted successfully");
+    }
+
+    // ==========================================
+    // REPORTING & ANALYTICS
+    // ==========================================
+
     @GetMapping("/{programId}/budget-report")
     public ResponseEntity<Map<String, Object>> getProgramBudgetReport(@PathVariable Long programId) {
-        log.info("REST request to generate budget report for Program ID: {}", programId);
         return ResponseEntity.ok(programService.getBudgetReport(programId));
     }
 }

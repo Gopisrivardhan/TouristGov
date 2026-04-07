@@ -1,18 +1,33 @@
 package com.tourismgov.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(HttpStatus.NOT_FOUND)
+/**
+ * ResourceNotFoundException - thrown when a record is not found in DB.
+ *
+ * Examples:
+ *   - User not found with given ID
+ *   - Notification not found with given ID
+ *
+ * Extends RuntimeException so we don't need try-catch everywhere.
+ * GlobalExceptionHandler catches this and returns 404 response.
+ */
 public class ResourceNotFoundException extends RuntimeException {
-    
+
+    /**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 
-	public ResourceNotFoundException(String message) {
+
+
+	// Constructor with custom message
+    public ResourceNotFoundException(String message) {
         super(message);
     }
+    
+    
 
+    // Constructor with resource name and ID - builds readable message
     public ResourceNotFoundException(String resourceName, Long id) {
-        super(String.format("%s not found with ID: %d", resourceName, id));
+        super(resourceName + " not found with id: " + id);
     }
 }
