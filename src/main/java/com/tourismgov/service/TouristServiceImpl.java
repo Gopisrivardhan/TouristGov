@@ -16,7 +16,7 @@ import com.tourismgov.dto.TouristResponse;
 import com.tourismgov.dto.TouristSummaryResponse;
 import com.tourismgov.dto.TouristUpdateRequest;
 import com.tourismgov.enums.Status;
-import com.tourismgov.exception.TouristErrorMessage;
+import com.tourismgov.exception.ErrorMessages;
 import com.tourismgov.model.Tourist;
 import com.tourismgov.model.User;
 import com.tourismgov.repository.TouristRepository;
@@ -97,7 +97,7 @@ public class TouristServiceImpl implements TouristService {
         Tourist tourist = touristRepository.findById(touristId).orElseThrow(() -> {
             log.error("Tourist {} not found", touristId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format(TouristErrorMessage.ERROR_TOURIST_NOT_FOUND, touristId));
+                    String.format(ErrorMessages.ERROR_TOURIST_NOT_FOUND, touristId));
         });
 
         // Note: We usually DO NOT audit log simple "GET" requests, otherwise the database 
@@ -145,7 +145,7 @@ public class TouristServiceImpl implements TouristService {
         Tourist tourist = touristRepository.findById(touristId).orElseThrow(() -> {
             log.error("Delete failed: Tourist {} not found", touristId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format(TouristErrorMessage.ERROR_TOURIST_NOT_FOUND, touristId));
+                    String.format(ErrorMessages.ERROR_TOURIST_NOT_FOUND, touristId));
         });
 
         User user = tourist.getUser();
@@ -184,7 +184,7 @@ public class TouristServiceImpl implements TouristService {
     private void validateAdult(Tourist tourist) {
         if (Period.between(tourist.getDob(), LocalDate.now()).getYears() < 18) {
             log.error("Tourist {} is under 18 years old", tourist.getName());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, TouristErrorMessage.ERROR_UNDERAGE_TOURIST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessages.ERROR_UNDERAGE_TOURIST);
         }
     }
 }

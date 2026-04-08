@@ -1,6 +1,7 @@
 package com.tourismgov.service;
 
-import com.tourismgov.dto.*;
+import com.tourismgov.dto.HeritageSiteRequest;
+import com.tourismgov.dto.HeritageSiteResponse;
 import java.util.List;
 
 public interface HeritageSiteService {
@@ -9,9 +10,4 @@ public interface HeritageSiteService {
     HeritageSiteResponse getSiteById(Long siteId);
     HeritageSiteResponse updateSite(Long siteId, HeritageSiteRequest request);
     void deleteSite(Long siteId);
-    
-    PreservationActivityResponse updateActivityStatus(Long activityId, String status);
-    List<PreservationActivityResponse> getActivitiesBySite(Long siteId);
-    void deleteActivity(Long activityId);
-    PreservationActivityResponse logActivity(Long siteId, PreservationActivityRequest request);
 }

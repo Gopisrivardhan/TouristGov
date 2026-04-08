@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
     @Index(name = "idx_audit_user", columnList = "user_id"),
     @Index(name = "idx_audit_timestamp", columnList = "timestamp")
 })
+@Setter
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED) 

@@ -1,6 +1,6 @@
 package com.tourismgov.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -37,7 +37,7 @@ public class PreservationActivity extends BaseEntity {
 	private String description;
 
 	@Column(name = "activity_date")
-	private LocalDate date;
+	private LocalDateTime date;
 
 	@Column(name = "activity_status")
 	private String status = "IN_PROGRESS";
